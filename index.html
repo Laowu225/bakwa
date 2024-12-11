@@ -60,6 +60,20 @@
             cursor: pointer;
             border-radius: 5px;
         }
+        .clear-cart, .delete-item {
+            background: #e74c3c;
+            color: white;
+            padding: 0.5em 1em;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 1em;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +105,7 @@
         <span>Items in Cart: <span id="cart-count">0</span></span>
         <div class="cart-details"></div>
         <button class="checkout" onclick="checkout()">Checkout</button>
+        <button class="clear-cart" onclick="clearCart()">Clear Cart</button>
     </div>
 
     <script>
@@ -110,47 +125,58 @@
             cartCount.textContent = cart.length;
 
             const cartDetails = document.querySelector('.cart-details');
-            cartDetails.innerHTML = cart.map(item => `<p>${item.name}: $${item.price}</p>`).join('');
+            cartDetails.innerHTML = cart.map((item, index) => `
+                <div class="cart-item">
+                    <span>${item.name}: $${item.price}</span>
+                    <button class="delete-item" onclick="removeItem(${index})">Delete</button>
+                </div>
+            `).join('');
         }
 
-        <script>
-    (function() {
-        emailjs.init("ULxspEucXw9Qd6rh7");  // Use your actual User ID here
-    })();
-
-    function checkout() {
-        const customerName = prompt("Enter your name:");
-        const customerAddress = prompt("Enter your address:");
-
-        if (customerName && customerAddress) {
-            // Prepare order details
-            const orderDetails = cart.map(item => `${item.name}: $${item.price}`).join(', ');
-            
-            // Send email using EmailJS
-            emailjs.send("service_qfvhpuf", "template_ufwxt9h", {
-                customer_name: customerName,
-                customer_address: customerAddress,
-                order_details: orderDetails
-            }).then(response => {
-                alert(`Thank you, ${customerName}! Your order has been placed.`);
-                console.log("Order Details Sent:", { customerName, customerAddress, cart });
-                cart.length = 0;
-                updateCart();
-            }).catch(error => {
-                alert("Failed to send order details. Please try again.");
-                console.error("EmailJS Error:", error);
-                console.log("Error response:", error.text);
-            });
-        } else {
-            alert("Please provide your details to complete the order.");
+        function removeItem(index) {
+            cart.splice(index, 1);  // Remove item from cart
+            updateCart();
         }
-    }
-</script>
 
+        function clearCart() {
+            cart.length = 0;  // Clear all items from the cart
+            updateCart();
+        }
+
+        // Initialize EmailJS with your user ID
+        (function() {
+            emailjs.init("ULxspEucXw9Qd6rh7");  // Use your actual User ID here
+        })();
+
+        function checkout() {
+            const customerName = prompt("Enter your name:");
+            const customerAddress = prompt("Enter your address:");
+
+            if (customerName && customerAddress) {
+                // Prepare order details
+                const orderDetails = cart.map(item => `${item.name}: $${item.price}`).join(', ');
+
+                // Send email using EmailJS
+                emailjs.send("service_qfvhpuf", "template_ufwxt9h", {
+                    customer_name: customerName,
+                    customer_address: customerAddress,
+                    order_details: orderDetails
+                }).then(response => {
+                    alert(`Thank you, ${customerName}! Your order has been placed.`);
+                    console.log("Order Details Sent:", { customerName, customerAddress, cart });
+                    cart.length = 0;
+                    updateCart();
+                }).catch(error => {
+                    alert("Failed to send order details. Please try again.");
+                    console.error("EmailJS Error:", error);
+                    console.log("Error response:", error.text);
+                });
+            } else {
+                alert("Please provide your details to complete the order.");
+            }
+        }
+    </script>
 
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-</script>
-
 </body>
 </html>
