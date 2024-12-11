@@ -114,18 +114,31 @@
         }
 
         function checkout() {
-            const customerName = prompt("Enter your name:");
-            const customerAddress = prompt("Enter your address:");
+    const customerName = prompt("Enter your name:");
+    const customerAddress = prompt("Enter your address:");
 
-            if (customerName && customerAddress) {
-                alert(`Thank you, ${customerName}! Your order has been placed.`);
-                console.log("Order Details:", { customerName, customerAddress, cart });
-                cart.length = 0;
-                updateCart();
-            } else {
-                alert("Please provide your details to complete the order.");
-            }
-        }
+    if (customerName && customerAddress) {
+        // Prepare order details
+        const orderDetails = cart.map(item => `${item.name}: $${item.price}`).join(', ');
+        
+        // Send email using EmailJS
+        emailjs.send("service_qfvhpuf", "template_ufwxt9h", {
+            customer_name: customerName,
+            customer_address: customerAddress,
+            order_details: orderDetails
+        }).then(() => {
+            alert(`Thank you, ${customerName}! Your order has been placed.`);
+            console.log("Order Details Sent:", { customerName, customerAddress, cart });
+            cart.length = 0;
+            updateCart();
+        }).catch(error => {
+            alert("Failed to send order details. Please try again.");
+            console.error("EmailJS Error:", error);
+        });
+    } else {
+        alert("Please provide your details to complete the order.");
+    }
+}
     </script>
 
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
@@ -135,6 +148,5 @@
     })();
 </script>
 
-    <script src="script.js"></script>
 </body>
 </html>
