@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 24.8.1.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.27in 11.69in; margin: 0.79in }
+		p { line-height: 115%; margin-bottom: 0.1in; background: transparent }
+		pre { background: transparent }
+		pre.western { font-family: "Liberation Mono", monospace; font-size: 10pt }
+		pre.cjk { font-family: "NSimSun", monospace; font-size: 10pt }
+		pre.ctl { font-family: "Liberation Mono", monospace; font-size: 10pt }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre class="western">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Jerky Food Store&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            padding: 1em;
+            justify-content: center;
+        }
+        .product {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1em;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .product img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .cart {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-details {
+            flex-grow: 1;
+            margin-left: 1em;
+        }
+        .checkout {
+            background: #ff9800;
+            color: white;
+            padding: 0.5em 1em;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;Jerky Food Store&lt;/h1&gt;
+    &lt;/header&gt;
+    &lt;main&gt;
+        &lt;section class=&quot;products&quot;&gt;
+            &lt;!-- Product 1 --&gt;
+            &lt;div class=&quot;product&quot; data-id=&quot;1&quot; data-name=&quot;Beef Jerky&quot; data-price=&quot;10&quot; data-weight=&quot;100g&quot;&gt;
+                &lt;img src=&quot;https://via.placeholder.com/150&quot; alt=&quot;Beef Jerky&quot;&gt;
+                &lt;h2&gt;Beef Jerky&lt;/h2&gt;
+                &lt;p&gt;Price: $10&lt;/p&gt;
+                &lt;p&gt;Weight: 100g&lt;/p&gt;
+                &lt;button onclick=&quot;addToCart(1)&quot;&gt;Add to Cart&lt;/button&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Product 2 --&gt;
+            &lt;div class=&quot;product&quot; data-id=&quot;2&quot; data-name=&quot;Turkey Jerky&quot; data-price=&quot;12&quot; data-weight=&quot;120g&quot;&gt;
+                &lt;img src=&quot;https://via.placeholder.com/150&quot; alt=&quot;Turkey Jerky&quot;&gt;
+                &lt;h2&gt;Turkey Jerky&lt;/h2&gt;
+                &lt;p&gt;Price: $12&lt;/p&gt;
+                &lt;p&gt;Weight: 120g&lt;/p&gt;
+                &lt;button onclick=&quot;addToCart(2)&quot;&gt;Add to Cart&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+    &lt;div class=&quot;cart&quot;&gt;
+        &lt;span&gt;Items in Cart: &lt;span id=&quot;cart-count&quot;&gt;0&lt;/span&gt;&lt;/span&gt;
+        &lt;div class=&quot;cart-details&quot;&gt;&lt;/div&gt;
+        &lt;button class=&quot;checkout&quot; onclick=&quot;checkout()&quot;&gt;Checkout&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        const cart = [];
+
+        function addToCart(productId) {
+            const productElement = document.querySelector(`.product[data-id='${productId}']`);
+            const name = productElement.getAttribute('data-name');
+            const price = parseFloat(productElement.getAttribute('data-price'));
+
+            cart.push({ name, price });
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartCount = document.getElementById('cart-count');
+            cartCount.textContent = cart.length;
+
+            const cartDetails = document.querySelector('.cart-details');
+            cartDetails.innerHTML = cart.map(item =&gt; `&lt;p&gt;${item.name}: $${item.price}&lt;/p&gt;`).join('');
+        }
+
+        function checkout() {
+            const customerName = prompt(&quot;Enter your name:&quot;);
+            const customerAddress = prompt(&quot;Enter your address:&quot;);
+
+            if (customerName &amp;&amp; customerAddress) {
+                alert(`Thank you, ${customerName}! Your order has been placed.`);
+                console.log(&quot;Order Details:&quot;, { customerName, customerAddress, cart });
+                cart.length = 0;
+                updateCart();
+            } else {
+                alert(&quot;Please provide your details to complete the order.&quot;);
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</body>
+</html>
